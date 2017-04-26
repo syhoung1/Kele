@@ -1,11 +1,12 @@
-class Kele
-  include HTTPartys
-  
-  def initialize(n, p)
-    @base_url = https://www.bloc.io/api/v1
-    @auth = { username: n, password: p }
-    @auth_token = self.class.post('https://www.bloc.io/api/v1/sessions', @auth)
-  end
+require 'httparty'
 
-  self.test = puts "hello"
+class Kele
+  include HTTParty
+
+  def initialize(n, p)
+    @base_url = 'https://www.bloc.io/api/v1'
+    @credentials = { body: { email: n, password: p } }
+    response = self.class.post("#{@base_url}/sessions", @credentials )
+    @auth_token = response['auth_token']
+  end
 end

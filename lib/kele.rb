@@ -1,4 +1,5 @@
 require 'httparty'
+require 'json'
 
 class Kele
   include HTTParty
@@ -8,5 +9,10 @@ class Kele
     @credentials = { body: { email: n, password: p } }
     response = self.class.post("#{@base_url}/sessions", @credentials )
     @auth_token = response['auth_token']
+  end
+  
+  def get_me
+    response = HTTParty.get("#{@base_url}/users/me", headers: { "authorization" => @auth_token})
+    JSON.parse(response.body)
   end
 end

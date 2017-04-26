@@ -15,4 +15,9 @@ class Kele
     response = HTTParty.get("#{@base_url}/users/me", headers: { "authorization" => @auth_token})
     JSON.parse(response.body)
   end
+  
+  def get_mentor_availability(mentor_id)
+    response = HTTParty.get("#{@base_url}/mentors/#{mentor_id}/student_availability", values: { id: mentor_id }, headers: { "authorization" => @auth_token })
+    JSON.parse(response.body)
+  end
 end

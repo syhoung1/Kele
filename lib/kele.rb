@@ -8,9 +8,7 @@ class Kele
 
   def initialize(n, p)
     @base_url = 'https://www.bloc.io/api/v1'
-    @email = n
-    @password = p
-    response = self.class.post("#{@base_url}/sessions", body: { email: @email, password: @password })
+    response = self.class.post("#{@base_url}/sessions", body: { email: n, password: p })
     @auth_token = response['auth_token']
   end
   
@@ -33,16 +31,26 @@ class Kele
     JSON.parse(response.body)
   end
   
-  def create_message(recipient_id, text)
+  def create_message(email, recipient_id, text)
     HTTParty.post(
       "#{@base_url}/messages", 
       body: {
-        sender: "#{@email}",
+        sender: email,
         recipient_id: recipient_id,
         "stripped-text" => text
       },
       headers: {
         "authorization" => @auth_token
       })
+  end
+  
+  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
+    HTTParty.post("#{@base_url}/checkpoint_submissions", values: {
+      assignment_branch: assignment_branch,
+      assignment_commit_link: assignment_commit_link,
+      checkpoint_id: checkpoint_id,
+      comment: comment
+    },
+    headers: { "authorization" => @auth_token })
   end
 end

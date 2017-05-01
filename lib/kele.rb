@@ -1,6 +1,7 @@
 require 'httparty'
 require 'json'
 require './lib/roadmap.rb'
+require 'pry'
 
 class Kele
   include HTTParty
@@ -44,13 +45,16 @@ class Kele
       })
   end
   
-  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
-    HTTParty.post("#{@base_url}/checkpoint_submissions", values: {
+  def create_submission(assignment_branch, assignment_commit_link, checkpoint_id, comment, enrollment_id)
+    response = HTTParty.post("#{@base_url}/checkpoint_submissions", body: {
       assignment_branch: assignment_branch,
       assignment_commit_link: assignment_commit_link,
       checkpoint_id: checkpoint_id,
-      comment: comment
+      comment: comment,
+      enrollment_id: enrollment_id
     },
     headers: { "authorization" => @auth_token })
+    
+    JSON.parse(response.body)
   end
 end
